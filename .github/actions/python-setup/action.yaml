@@ -1,0 +1,19 @@
+name: Setup python
+description: Python and Dependencies setup
+
+runs:
+  using: 'composite'
+  steps:
+    - id: python-setup
+      uses: actions/setup-python@v4
+      with:
+        python-version-file: .python-version
+
+    - name: Install dependencies
+      id: install-dependencies
+      shell: bash
+      run: |
+        # install dependencies
+        python -m pip install --upgrade pip
+        pip install -U pip wheel setuptools
+        pip install -r requirements-dev.txt
