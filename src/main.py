@@ -1,35 +1,16 @@
-from pymilvus import MilvusClient
+# This is a sample Python script.
 
-# Set Up Vector Database
-client = MilvusClient("milvus_demo.db")
-
-# Create a Collection
-if client.has_collection(collection_name="demo_collection"):
-    client.drop_collection(collection_name="demo_collection")
-client.create_collection(
-    collection_name="demo_collection",
-    dimension=768,  # The vectors we will use in this demo has 768 dimensions
-)
+# Press ⌃R to execute it or replace it with your code.
+# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-from pymilvus import model
+def print_hi(name):
+    # Use a breakpoint in the code line below to debug your script.
+    print(f"Hi, {name}")  # Press ⌘F8 to toggle the breakpoint.
 
 
-embedding_fn = model.DefaultEmbeddingFunction()
+# Press the green button in the gutter to run the script.
+if __name__ == "__main__":
+    print_hi("PyCharm")
 
-docs = [
-    "Artificial intelligence was founded as an academic discipline in 1956.",
-    "Alan Turing was the first person to conduct substantial research in AI.",
-    "Born in Maida Vale, London, Turing was raised in southern England.",
-]
-
-vectors = embedding_fn.encode_documents(docs)
-print("Dim:", embedding_fn.dim, vectors[0].shape)  # Dim: 768 (768,)
-
-data = [
-    {"id": i, "vector": vectors[i], "text": docs[i], "subject": "history"}
-    for i in range(len(vectors))
-]
-
-print("Data has", len(data), "entities, each with fields: ", data[0].keys())
-print("Vector dim:", len(data[0]["vector"]))
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/
