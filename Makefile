@@ -47,6 +47,27 @@ unit: clean
 	pytest -v -s tests/unit --no-header -vv --cov=src --cov-report=term-missing
 	coverage xml
 
+## down build docker image
+drop-image:
+	docker compose -f docker-compose-test.yaml down -v --rmi all
+
+
+## build docker image
+build-image:
+	docker compose -f docker-compose-test.yaml build
+
+
+## run docker image
+run-image:
+	docker compose -f docker-compose-test.yaml up -d
+
+
+## drop containers
+drop-containers:
+	docker compose -f docker-compose-test.yaml down --volumes --remove-orphans
+
+
+
 
 docs: FORCE
 	cd docs; . .venv/bin/activate && sphinx-apidoc -o ./source ./src

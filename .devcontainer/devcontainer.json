@@ -1,0 +1,5 @@
+{
+    "dockerComposeFile": "../docker-compose-test.yaml",
+    "service": "devcontainer",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+}
