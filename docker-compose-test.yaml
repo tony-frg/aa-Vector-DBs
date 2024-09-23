@@ -4,4 +4,4 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ../..:/workspaces:cached
+      - ./:/usr/repos/aa-vector-dbs
