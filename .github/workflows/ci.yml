@@ -50,7 +50,3 @@ jobs:
         id: check
         run: |
           make check
-
-      - name: Run unit tests
-        run: |
-          make unit

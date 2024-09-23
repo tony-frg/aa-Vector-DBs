@@ -10,6 +10,7 @@ collection = chroma_client.get_or_create_collection(name="my_collection")
 # switch `add` to `upsert` to avoid adding the same documents every time
 collection.upsert(documents=["This is a document about pineapple", "This is a document about oranges"], ids=["id1", "id2"])
 
+# You can query the collection with a list of query texts, and Chroma will return the n most similar results. It's that easy!
 results = collection.query(
     query_texts=["This is a query document about florida"],  # Chroma will embed this for you
     n_results=2,  # how many results to return

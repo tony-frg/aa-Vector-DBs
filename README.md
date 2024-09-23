@@ -50,17 +50,3 @@ Add description
   make install-dev
   ```
 - Please do not use pip by hand as the makefile contains the explicit activation of pre-commit hooks which will be necessary.
-
-## Testing
-
-### Unit Testing
-Tested with python 3.10.12.
-
-```bash
-  make install-dev
-```
-
-- Run all unit tests with:
-```bash
-  make unit
- ```

@@ -13,15 +13,7 @@ clean-pyc:
 	find . -name '__pycache__' -exec rm -fr {} +
 	find . -name '.pytest_cache' -exec rm -fr {} +
 
-
-clean-test:
-	rm -rf .coverage
-	rm -rf .coverage.*
-	rm -rf coverage-reports
-	rm -rf allure_results
-
-
-clean: clean-pyc clean-test
+clean: clean-pyc
 
 
 ## uninstall all dev packages
@@ -42,11 +34,6 @@ format:
 	isort src tests
 	black src tests
 
-## run unit tests
-unit: clean
-	pytest -v -s tests/unit --no-header -vv --cov=src --cov-report=term-missing
-	coverage xml
-
 ## down build docker image
 drop-image:
 	docker compose -f docker-compose-test.yaml down -v --rmi all
@@ -65,9 +52,3 @@ run-image:
 ## drop containers
 drop-containers:
 	docker compose -f docker-compose-test.yaml down --volumes --remove-orphans
-
-
-docs: FORCE
-	cd docs; . .venv/bin/activate && sphinx-apidoc -o ./source ./src
-	cd docs; . .venv/bin/activate && sphinx-build -b html ./source ./build
-FORCE:

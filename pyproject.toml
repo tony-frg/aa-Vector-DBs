@@ -7,28 +7,6 @@ include = '\.pyi?$'
 line-length = 132
 target-version = ['py310']
 
-[tool.coverage.xml]
-output = "coverage-reports/cobertura-coverage.xml"
-
-[tool.coverage.report]
-show_missing = true
-omit = [
-    "*/__init__.py",
-    ".mypy_cache",
-    ".pytest_cache"
-]
-
-[tool.coverage.run]
-source = ["aa-Vector-DBs"]
-branch = true
-relative_files = true
-omit = ["*/__init__.py",
-    ".mypy_cache",
-    ".pytest_cache",
-    "tests/",
-    "docs/",
-    ".git"]
-
 [tool.mypy]
 python_version = "3.10"
 no_implicit_optional = false
