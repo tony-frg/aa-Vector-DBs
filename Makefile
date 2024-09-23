@@ -23,16 +23,16 @@ uninstall-dev:
 
 ## Run linting checks
 check:
-	isort --check src tests	# setup.cfg
-	black --check src tests	# pyproject.toml
-	flake8 src tests	# setup.cfg
-	mypy src tests	# setup.cfg
+	isort --check src # setup.cfg
+	black --check src # pyproject.toml
+	flake8 src 		  # setup.cfg
+	mypy src          # setup.cfg
 
 
 ## reformat the files using the formatters
 format:
-	isort src tests
-	black src tests
+	isort src
+	black src
 
 ## down build docker image
 drop-image:
