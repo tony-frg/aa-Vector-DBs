@@ -3,7 +3,7 @@
 ##  install packages, install pre-commit
 install-dev:
 	pip3 install -U pip wheel setuptools
-	pip3 install -r requirements-dev.txt
+	pip3 install --no-cache-dir --upgrade -r requirements-dev.txt
 	pre-commit install
 
 clean-pyc:
@@ -65,8 +65,6 @@ run-image:
 ## drop containers
 drop-containers:
 	docker compose -f docker-compose-test.yaml down --volumes --remove-orphans
-
-
 
 
 docs: FORCE
