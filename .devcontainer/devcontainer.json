@@ -1,5 +1,6 @@
 {
     "dockerComposeFile": "../docker-compose-test.yaml",
     "service": "devcontainer",
-    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+    "workspaceFolder": "/workspaces/repos/${localWorkspaceFolderBasename}",
+    "extensions": ["ms-python.python"]
 }
