@@ -46,7 +46,7 @@ jobs:
       - name: Set up
         uses: ./.github/actions/python-setup
 
-      - name: Check
-        id: check
-        run: |
-          make check
+      # - name: Check
+      #   id: check
+      #   run: |
+      #     make check

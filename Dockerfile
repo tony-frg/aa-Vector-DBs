@@ -9,8 +9,11 @@ COPY . /usr/repos/aa-Vector-DBs
 
 # install system dependencies
 RUN apt-get update \
-  && apt-get -y install make git \
-  && apt-get clean
+  && apt-get -y install \
+  make \
+  git \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # install python dependencies
 RUN make install-dev

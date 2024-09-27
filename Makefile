@@ -6,12 +6,14 @@ install-dev:
 	pip3 install --no-cache-dir --upgrade -r requirements-dev.txt
 	pre-commit install
 
+
 clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 	find . -name '.pytest_cache' -exec rm -fr {} +
+
 
 clean: clean-pyc
 
@@ -33,6 +35,7 @@ check:
 format:
 	isort src
 	black src
+
 
 ## down build docker image
 drop-image:

@@ -61,3 +61,7 @@ sql/postgres_init.sql
 allure_results/
 
 coverage-reports/
+
+data/
+chroma-data/
+pgvector-data/
