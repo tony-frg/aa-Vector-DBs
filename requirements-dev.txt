@@ -4,3 +4,7 @@ black==23.9.1
 flake8==6.1.0
 mypy==1.6.0
 chromadb
+transformers
+torch
+torchvision
+psycopg2-binary
