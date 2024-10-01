@@ -154,3 +154,7 @@ Once your Docker containers are running, you can access the databases using thes
 - User: `myuser`
 - Password: `mypassword`
 If you're using Vector Admin, it will be available at http://localhost:3001.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
