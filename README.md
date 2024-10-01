@@ -10,13 +10,17 @@ data. It includes basic **CRUD operations** (Create, Read, Update, Delete) using
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Setup](#setup)
+  - [Devcontainer Setup](#devcontainer-setup)
+  - [Running Python Scripts in Devcontainer](#running-python-scripts-in-devcontainer)
 - [Chroma DB Examples](#chroma-db-examples)
   - [CRUD Operations](#crud-operations-for-chroma-db)
 - [pgVector Examples](#pgvector-examples)
   - [CRUD Operations](#crud-operations-for-pgvector)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+  - [Running ChromaDB CRUD Operations](#running-chromadb-crud-operations)
+  - [Running pgVector CRUD Operations](#running-pgvector-crud-operations)
+- [Database Access](#database-access)
+
 
 ## Introduction
 
@@ -74,8 +78,6 @@ Once the containers are up, you'll have access to:
 - **Vector Admin** running at `localhost:3001`
 - A development container for running Python code
 
-Now, you can run the Python code using the terminal inside the devcontainer.
-
 ### Running Python Scripts in Devcontainer
 Once the devcontainer is running:
 
@@ -112,3 +114,43 @@ vectors in a relational database.
 - **Delete**: Remove vectors from the table.
 
 Examples are located in the [`src/pgvector_examples`](src/pgvector_examples) directory.
+
+## Usage
+After setting up the environment and the devcontainer, you can run the following example scripts:
+
+### Running ChromaDB CRUD Operations
+To run the ChromaDB CRUD operations:
+```bash
+python src/chroma_db_examples/chroma_crud.py
+```
+
+This will demonstrate how to:
+
+- Create a collection and add documents to it
+- Perform similarity search queries
+- Update and delete collections
+
+### Running pgVector CRUD Operations
+To run the pgVector CRUD operations:
+
+```bash
+python src/pgvector_examples/pgvector_crud.py
+```
+
+This will execute:
+
+- Insertion of vectors into the `pgvector` table
+- Perform similarity searches using `pgvector`
+- Update and delete vector data
+
+## Database Access
+Once your Docker containers are running, you can access the databases using these URLs:
+
+- ChromaDB: http://localhost:8000
+- pgVector (PostgreSQL): Use any PostgreSQL client (e.g., DBeaver) with the following settings:
+- Host: `localhost`
+- Port: `5433`
+- Database: `mydb`
+- User: `myuser`
+- Password: `mypassword`
+If you're using Vector Admin, it will be available at http://localhost:3001.
