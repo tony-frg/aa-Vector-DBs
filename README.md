@@ -1,8 +1,9 @@
 # aa-Vector-Databases CRUD Examples
 
-This repository provides examples of how to use **vector databases** for storing and querying high-dimensional vector data. It includes basic **CRUD operations** (Create, Read, Update, Delete) using two popular vector databases:
+This repository provides examples of how to use **vector databases** for storing and querying high-dimensional vector
+data. It includes basic **CRUD operations** (Create, Read, Update, Delete) using two popular vector databases:
 - **Chroma DB**
-- **pgvector** (Postgres with the `pgvector` extension)
+- **pgVector** (Postgres with the `pgvector` extension)
 
 ## Table of Contents
 
@@ -11,7 +12,7 @@ This repository provides examples of how to use **vector databases** for storing
 - [Setup](#setup)
 - [Chroma DB Examples](#chroma-db-examples)
   - [CRUD Operations](#crud-operations-for-chroma-db)
-- [pgvector Examples](#pgvector-examples)
+- [pgVector Examples](#pgvector-examples)
   - [CRUD Operations](#crud-operations-for-pgvector)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -19,7 +20,8 @@ This repository provides examples of how to use **vector databases** for storing
 
 ## Introduction
 
-Vector databases are specialized data stores optimized for handling vectors, commonly used in AI/ML applications for tasks such as semantic search, embeddings, and similarity searches. This repository demonstrates how to:
+Vector databases are specialized data stores optimized for handling vectors, commonly used in AI/ML applications for
+tasks such as semantic search, embeddings, and similarity searches. This repository demonstrates how to:
 - Store vector data
 - Retrieve and query vectors
 - Update vectors
@@ -32,38 +34,61 @@ Before you begin, ensure you have the following installed:
 - [Docker](https://www.docker.com/) for running services locally
 - [Python 3.10+](https://www.python.org/) for running Python code
 - [PostgreSQL](https://www.postgresql.org/) (with `pgvector` extension)
+- [Visual Studio Code](https://code.visualstudio.com/Download) for working with **devcontainers**
 
 ## Setup
 
-### Clone the repository
+* Clone the repository:
+    ```bash
+    git clone https://github.com/tony-frg/aa-Vector-DBs.git
+    cd aa-Vector-DBs
+    ```
+* Create a virtualenv:
+  ```bash
+  python -m venv .venv
+  source .venv/bin/activate
+  ```
 
-```commandline
-git clone https://github.com/your-username/vector-dbs-crud.git
-cd vector-dbs-crud
-```
+* Install Python Dependencies via:
+  ```bash
+  make install-dev
+  ```
+  This will install dependencies listed in the `requirements-dev.txt` file, which include libraries like `psycopg2` for
+  PostgreSQL and `chromadb` for Chroma DB.
 
-### Install Python Dependencies
+### Devcontainer Setup
 
-Make sure you have `make` installed and run the following command to install necessary Python libraries:
+To run the Python code from inside a **devcontainer**, make sure you have Docker and Visual Studio Code with the
+**Remote - Containers** extension installed.
 
+1. Open the project folder in Visual Studio Code.
+2. Visual Studio Code will detect the `.devcontainer` configuration and prompt you to "**Reopen in Container**".
+Click this option.
+3. The devcontainer setup will automatically build and launch the Docker environment defined in `docker-compose.yaml`.
 
-This will install dependencies listed in the `requirements-dev.txt` file, which include libraries like `psycopg2` for PostgreSQL and `chromadb` for Chroma DB.
-
-### Running with Docker
-
-For easy setup, we provide a `docker-compose-test.yaml` file that sets up both **pgvector** and your development environment.
-
-```commandline
-make run-image
-```
+Inside the container, the workspace is mounted at `/usr/repos/aa-Vector-DBs`.
 
 Once the containers are up, you'll have access to:
+- **ChromaDB** running at `localhost:8000`
 - **pgvector** running at `localhost:5433`
+- **Vector Admin** running at `localhost:3001`
 - A development container for running Python code
+
+Now, you can run the Python code using the terminal inside the devcontainer.
+
+### Running Python Scripts in Devcontainer
+Once the devcontainer is running:
+
+1. Open a terminal within VS Code (inside the devcontainer).
+2. Run any Python script. For example:
+    ```bash
+    python src/pgvector_examples/pgvector_crud.py
+    ```
 
 ## Chroma DB Examples
 
-**Chroma DB** is a vector database that is designed for fast and efficient storage and retrieval of high-dimensional vector embeddings.
+**Chroma DB** is a vector database that is designed for fast and efficient storage and retrieval of high-dimensional
+vector embeddings.
 
 ### CRUD Operations for Chroma DB
 
@@ -72,37 +97,18 @@ Once the containers are up, you'll have access to:
 - **Update**: Modify existing vectors.
 - **Delete**: Remove vectors from the database.
 
-You can find the code examples in the [\`chroma_db/\`](chroma_db/) directory.
+You can find the code examples in the [`src/chroma_db_examples/`](src/chroma_db_examples) directory.
 
-## pgvector Examples
+## pgVector Examples
 
-**pgvector** is an extension for PostgreSQL that adds support for vector data types. It allows you to store and query vectors in a relational database.
+**pgVector** is an extension for PostgreSQL that adds support for vector data types. It allows you to store and query
+vectors in a relational database.
 
 ### CRUD Operations for pgvector
 
-- **Create**: Insert vector data into a \`pgvector\` table.
+- **Create**: Insert vector data into a `pgvector` table.
 - **Read**: Query vectors using Postgres SQL with similarity functions.
-- **Update**: Modify vectors in a \`pgvector\` column.
+- **Update**: Modify vectors in a `pgvector` column.
 - **Delete**: Remove vectors from the table.
 
-Examples are located in the [\`pgvector/\`](pgvector/) directory.
-
-## Usage
-
-To run any of the examples:
-1. Ensure the PostgreSQL and Chroma DB services are running.
-2. Execute the Python scripts in either the \`chroma_db/\` or \`pgvector/\` folders to see CRUD operations in action.
-
-Example command for running \`pgvector\` CRUD script:
-
-\`\`\`bash
-python pgvector/crud_example.py
-\`\`\`
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request if you'd like to contribute.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Examples are located in the [`src/pgvector_examples`](src/pgvector_examples) directory.
