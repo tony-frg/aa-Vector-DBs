@@ -39,19 +39,19 @@ format:
 
 ## down build docker image
 drop-image:
-	docker compose -f docker-compose-test.yaml down -v --rmi all
+	docker compose -f docker-compose.yaml down -v --rmi all
 
 
 ## build docker image
 build-image:
-	docker compose -f docker-compose-test.yaml build
+	docker compose -f docker-compose.yaml build
 
 
 ## run docker image
 run-image:
-	docker compose -f docker-compose-test.yaml up -d
+	docker compose -f docker-compose.yaml up -d
 
 
 ## drop containers
 drop-containers:
-	docker compose -f docker-compose-test.yaml down --volumes --remove-orphans
+	docker compose -f docker-compose.yaml down --volumes --remove-orphans
