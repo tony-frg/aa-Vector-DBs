@@ -1,3 +1,9 @@
+/*
+An HNSW index creates a multilayer graph. It has better query performance than an
+IVFFlat index (in terms of speed-recall tradeoff), but has slower build times and uses
+more memory. Also, an HNSW index can be created without any data in the table since
+there isn’t a training step like there is for an IVFFlat index.
+*/
 -- L2 distance:
 CREATE INDEX ON items USING hnsw (embedding vector_l2_ops);
 

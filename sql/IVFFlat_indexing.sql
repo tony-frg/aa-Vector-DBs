@@ -1,6 +1,8 @@
-/*An IVFFlat index divides vectors into lists and searches a subset of those lists that are
+/*
+An IVFFlat index divides vectors into lists and searches a subset of those lists that are
 closest to the query vector. It has faster build times and uses less memory than HNSW,
-but has lower query performance with respect to the speed-recall tradeoff.*/
+but has lower query performance with respect to the speed-recall tradeoff.
+*/
 
 -- L2 distance:
 CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100);
