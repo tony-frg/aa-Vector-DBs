@@ -61,6 +61,13 @@ services:
 #     depends_on:
 #       - postgres  # Ensure Postgres starts before Vector Admin
 
+
+# # ChromaDB Admin Service
+#   chromadbadmin:
+#     image: fengzhichao/chromadb-admin:latest
+#     ports:
+#       - "3000:3000"  # Expose ChromaDB Admin
+
 volumes:
   chroma-data:
   pgvector-data:

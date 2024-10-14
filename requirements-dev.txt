@@ -4,7 +4,7 @@ black==24.10.0
 flake8==6.1.0
 mypy==1.11.2
 chromadb==0.5.11
-# transformers==4.45.1
-# torch
+transformers==4.45.1
+torch
 # torchvision==0.19.1
 psycopg2-binary==2.9.9
