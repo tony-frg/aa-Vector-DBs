@@ -11,15 +11,15 @@ services:
 
   # ChromaDB Service
   chromadb:
-    image: chromadb/chroma:latest
+    image: chromadb/chroma:0.5.13
     volumes:
       - ./chroma-data:/chroma/chroma
     environment:
-      - IS_PERSISTENT=TRUE  # let’s Chroma know to persist data
+      - IS_PERSISTENT=TRUE  # lets Chroma know to persist data
       - PERSIST_DIRECTORY=/chroma/chroma # this is the default path, change it as needed
-      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-TRUE}
+      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-FALSE}
     ports:
-      - 8000:8000
+      - "8000:8000"
     healthcheck:
       test: [ "CMD", "/bin/bash", "-c", "cat < /dev/null > /dev/tcp/localhost/8001" ]
       interval: 30s
@@ -46,20 +46,26 @@ services:
       start_period: 5s
     restart: always
 
-# # Vector Admin Service
-#   vectoradmin:
-#     image: mintplexlabs/vectoradmin:latest
-#     ports:
-#       - "3001:3001"  # Expose Vector Admin
-#     environment:
-#       SERVER_PORT: "3001"
-#       JWT_SECRET: "your-random-jwt-secret"
-#       INNGEST_EVENT_KEY: "background_workers"
-#       INNGEST_SIGNING_KEY: "random-string-goes-here"
-#       INNGEST_LANDING_PAGE: "true"
-#       DATABASE_CONNECTION_STRING: "postgresql://myuser:mypassword@postgres:5432/vdbms"  # New database for Vector Admin
-#     depends_on:
-#       - postgres  # Ensure Postgres starts before Vector Admin
+# Vector Admin Service
+  vectoradmin:
+    image: mintplexlabs/vectoradmin:latest
+    ports:
+      - "3001:3001"  # Expose Vector Admin
+    environment:
+      SERVER_PORT: "3001"
+      JWT_SECRET: "your-random-jwt-secret"
+      INNGEST_EVENT_KEY: "background_workers"
+      INNGEST_SIGNING_KEY: "random-string-goes-here"
+      INNGEST_LANDING_PAGE: "true"
+      DATABASE_CONNECTION_STRING: "postgresql://myuser:mypassword@postgres:5432/vdbms"  # New database for Vector Admin
+    depends_on:
+      - postgres  # Ensure Postgres starts before Vector Admin
+
+# ChromaDB Admin Service
+  chromadbadmin:
+    image: fengzhichao/chromadb-admin:latest
+    ports:
+      - "3000:3000"  # Expose ChromaDB Admin
 
 volumes:
   chroma-data:
