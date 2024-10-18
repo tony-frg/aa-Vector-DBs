@@ -1,10 +1,13 @@
+import uuid
 from typing import Dict, List
 
-from chromadb import HttpClient
+import chromadb.utils.embedding_functions as ef
+from chr_embedding_util import CustomEmbeddingFunction
+from chromadb import EmbeddingFunction, HttpClient
 from chromadb.api.models.Collection import Collection
 
 # Create a Chroma client
-chroma_host = "chromadb"
+chroma_host = "localhost"
 chroma_port = 8000
 client = HttpClient(host=chroma_host, port=chroma_port)
 
@@ -13,16 +16,16 @@ client = HttpClient(host=chroma_host, port=chroma_port)
 # ================================
 
 
-def create_collection(collection_name: str, documents: List[str]) -> Collection:
+def create_collection(
+    collection_name: str, documents: List[str] | None, embedding_func: EmbeddingFunction = ef.DefaultEmbeddingFunction()
+) -> Collection:
     """
-    Create a new collection in Chroma or retrieve an existing one.
-
-    This function creates a collection with the given name and adds the provided documents to it.
-    If the collection already exists, it retrieves and adds the documents to it.
+    Create a new collection in Chroma or retrieve an existing one, optionally adding the provided documents.
+    Uses UUIDs based on timestamps for document IDs.
 
     Args:
         collection_name (str): The name of the collection.
-        documents (List[str]): A list of documents (strings) to add to the collection.
+        documents (Optional[List[str]]): A list of documents (strings) to add to the collection. Defaults to None.
 
     Returns:
         Collection: The created or retrieved collection object.
@@ -30,10 +33,16 @@ def create_collection(collection_name: str, documents: List[str]) -> Collection:
     Example:
         collection = create_collection("my_collection", ["doc1", "doc2"])
     """
-    collection = client.get_or_create_collection(name=collection_name)
-    document_ids = [f"id{idx}" for idx, _ in enumerate(documents)]
-    collection.add(documents=documents, ids=document_ids)
-    print(f"Documents added to collection '{collection_name}'")
+    # Get or create the collection
+    collection = client.get_or_create_collection(name=collection_name, embedding_function=embedding_func)
+
+    # Add documents if any are provided
+    if documents:
+        # document_ids = [f"id{idx}" for idx, _ in enumerate(documents)]
+        document_ids = [str(uuid.uuid1()) for _ in documents]
+        collection.add(documents=documents, ids=document_ids)
+        print(f"Documents added to collection '{collection_name}'")
+
     return collection
 
 
@@ -128,9 +137,29 @@ documents = [
     "In the quantum realm, particles flicker in and out of existence, dancing to the tunes of probability.",
 ]
 
+# Sample documents for a new collection
+new_documents = [
+    "The majestic eagle soars high above the mountain peaks, scanning the terrain with sharp eyes.",
+    "Under a starry sky, a lone astronomer observes distant galaxies through his telescope.",
+    "The violinist pours their soul into each note, creating a symphony that touches the heart.",
+    "The bustling city streets are filled with the sounds of honking cars and lively conversations.",
+    "A gentle breeze rustles the leaves of the old oak tree, carrying the scent of blooming flowers.",
+    "In the arctic tundra, a polar bear hunts for seals beneath the vast expanse of ice and snow.",
+    "The artist splashes vivid colors on the canvas, turning imagination into a stunning landscape.",
+    "The spaceship glides silently through the void, exploring the mysteries of distant planets.",
+    "A baker kneads dough with care, crafting a loaf that fills the air with the aroma of fresh bread.",
+    "In the deep jungle, a hidden waterfall cascades into a crystal-clear pool surrounded by lush greenery.",
+]
+
+
 # 1. CREATE: Add documents to a new collection
-collection_name = "test_5"
-collection = create_collection(collection_name, documents)
+collection_name = "test_6"
+collection = create_collection(collection_name, new_documents, embedding_func=CustomEmbeddingFunction())
+
+# # Create a new collection with the new documents
+# new_collection_name = "nature_and_art"
+# new_collection = create_collection(new_collection_name, new_documents)
+
 
 # # Get the list of collections
 # collections = client.list_collections()
