@@ -2,10 +2,9 @@ import os
 
 import torch
 import torch.nn.functional as F
+from chromadb import Documents, EmbeddingFunction, Embeddings
 from torch import Tensor
 from transformers import AutoModel, AutoTokenizer
-
-from chromadb import Documents, EmbeddingFunction, Embeddings
 
 # We won't have competing threads in this example app
 os.environ["TOKENIZERS_PARALLELISM"] = "false"

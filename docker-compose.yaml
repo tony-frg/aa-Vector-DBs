@@ -4,10 +4,10 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/usr/repos/aa-Vector-DBs
+      - ./:/usr/repos/vector-dbs
     depends_on:
       - chromadb
-      - postgres
+      # - postgres
 
   # ChromaDB Service
   chromadb:

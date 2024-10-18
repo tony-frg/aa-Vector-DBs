@@ -3,9 +3,8 @@ from typing import Dict, List
 
 import chromadb.utils.embedding_functions as ef
 from chr_embedding_util import CustomEmbeddingFunction
-from chromadb.api.models.Collection import Collection
-
 from chromadb import EmbeddingFunction, HttpClient
+from chromadb.api.models.Collection import Collection
 
 # Create a Chroma client
 chroma_host = "localhost"
