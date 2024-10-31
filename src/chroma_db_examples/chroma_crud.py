@@ -2,23 +2,18 @@ import uuid
 from typing import Dict, List
 
 import chromadb.utils.embedding_functions as ef
-from chr_embedding_util import CustomEmbeddingFunction
+from chr_embedding_util import MyCustomEmbeddingFunction
 from chromadb import EmbeddingFunction, HttpClient
 from chromadb.api.models.Collection import Collection
 
-# Create a Chroma client
-chroma_host = "localhost"
-chroma_port = 8000
-client = HttpClient(host=chroma_host, port=chroma_port)
+from src.config import settings
 
 # ================================
 # CRUD Operations
 # ================================
 
 
-def create_collection(
-    collection_name: str, documents: List[str] | None, embedding_func: EmbeddingFunction = ef.DefaultEmbeddingFunction()
-) -> Collection:
+def create_collection(collection_name: str, documents: List[str] | None, embedding_func: EmbeddingFunction | None) -> Collection:
     """
     Create a new collection in Chroma or retrieve an existing one, optionally adding the provided documents.
     Uses UUIDs based on timestamps for document IDs.
@@ -123,6 +118,11 @@ def delete_collection(collection_name: str) -> None:
 # Example Usage
 # ================================
 
+# Create a Chroma client
+chroma_host = settings.chroma_host
+chroma_port = settings.chroma_port
+client = HttpClient(host=chroma_host, port=chroma_port)
+
 # Sample documents
 documents = [
     "A group of vibrant parrots chatter loudly, sharing stories of their tropical adventures.",
@@ -153,8 +153,21 @@ new_documents = [
 
 
 # 1. CREATE: Add documents to a new collection
-collection_name = "test_6"
-collection = create_collection(collection_name, new_documents, embedding_func=CustomEmbeddingFunction())
+collection_name = "test_collection"
+
+openai_ef = ef.OpenAIEmbeddingFunction(
+    api_key=settings.openai_api_key,
+    model_name=settings.openai_embedding_model,
+)
+
+sentence_transformer_ef = ef.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
+
+my_custom_ef = MyCustomEmbeddingFunction()
+
+
+oaief_collection = create_collection(collection_name + "_" + "opeanai", new_documents, embedding_func=openai_ef)
+stef_collection = create_collection(collection_name + "_" + "sent_transf", new_documents, embedding_func=sentence_transformer_ef)
+custef_collection = create_collection(collection_name + "_" + "cust_ef", new_documents, embedding_func=my_custom_ef)
 
 # # Create a new collection with the new documents
 # new_collection_name = "nature_and_art"
@@ -170,7 +183,7 @@ collection = create_collection(collection_name, new_documents, embedding_func=Cu
 
 # 2. READ: Query the collection
 query = "Give me some content about the ocean"
-result = read_collection(collection, query, include_embeddings=True)
+result = read_collection(oaief_collection, query, include_embeddings=True)
 
 # Display query results
 print(f"Query: {query}\nMost similar sentences:")
@@ -183,7 +196,7 @@ for id_, document, distance, embedding in zip(
 
 # 3. UPDATE: Add more documents to the collection
 new_documents = ["The sea turtle swims gracefully through the crystal-clear ocean."]
-update_collection(collection, new_documents)
+update_collection(oaief_collection, new_documents)
 
 # 4. DELETE: Delete the collection (if needed)
 # delete_collection(collection_name)

@@ -1,40 +1,106 @@
-import os
+import importlib
+from typing import Optional
 
-import torch
-import torch.nn.functional as F
-from chromadb import Documents, EmbeddingFunction, Embeddings
-from torch import Tensor
-from transformers import AutoModel, AutoTokenizer
-
-# We won't have competing threads in this example app
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
+import numpy as np
+import numpy.typing as npt
+from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 
 
-# Initialize tokenizer and model for GTE-base
-tokenizer = AutoTokenizer.from_pretrained("thenlper/gte-base")
-model = AutoModel.from_pretrained("thenlper/gte-base")
+class MyCustomEmbeddingFunction(EmbeddingFunction[Documents]):
+    """
+    An embedding function class that uses a transformer-based model for generating embeddings.
 
+    This class leverages the Hugging Face `transformers` library and PyTorch to compute
+    embeddings from input texts. It supports pooling strategies and L2 normalization for
+    the generated embeddings.
 
-def average_pool(last_hidden_states: Tensor, attention_mask: Tensor) -> Tensor:
-    last_hidden = last_hidden_states.masked_fill(~attention_mask[..., None].bool(), 0.0)
-    return last_hidden.sum(dim=1) / attention_mask.sum(dim=1)[..., None]
+    Args:
+        model_name (str): The name of the pretrained model to use. Defaults to "thenlper/gte-base".
+        cache_dir (Optional[str]): Directory for caching the model files. If None, the default cache
+            directory of Hugging Face models will be used.
 
+    Raises:
+        ValueError: If `transformers` or `torch` libraries are not installed.
+    """
 
-def generate_embeddings(text):
-    inputs = tokenizer(text, return_tensors="pt", max_length=512, truncation=True)
-    with torch.no_grad():
-        outputs = model(**inputs)
+    def __init__(
+        self,
+        model_name: str = "thenlper/gte-base",
+        cache_dir: Optional[str] = None,
+    ):
+        try:
+            from transformers import AutoModel, AutoTokenizer
 
-    attention_mask = inputs["attention_mask"]
-    embeddings = average_pool(outputs.last_hidden_state, attention_mask)
+            self._torch = importlib.import_module("torch")
+            self._F = importlib.import_module("torch.nn.functional")
+            self._tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
+            self._model = AutoModel.from_pretrained(model_name, cache_dir=cache_dir)
+        except ImportError:
+            raise ValueError(
+                "The transformers and/or pytorch python package is not installed. "
+                "Please install them with `pip install transformers` and `pip install torch`"
+            )
 
-    # (Optionally) normalize embeddings
-    embeddings = F.normalize(embeddings, p=2, dim=1)
+        # Disable parallelism to prevent threading issues during tokenization
+        import os
 
-    return embeddings.numpy().tolist()[0]
+        os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
+    @staticmethod
+    def _average_pool(last_hidden_states: npt.NDArray, attention_mask: npt.NDArray) -> npt.NDArray:
+        """
+        Performs average pooling over the token embeddings, using the attention mask to ignore padding.
 
-# Inherit from the EmbeddingFunction class to implement our custom embedding function
-class CustomEmbeddingFunction(EmbeddingFunction):
+        Args:
+            last_hidden_states (npt.NDArray): The output hidden states from the transformer model.
+            attention_mask (npt.NDArray): The attention mask indicating which tokens are padding.
+
+        Returns:
+            npt.NDArray: The average-pooled embeddings.
+        """
+        last_hidden = last_hidden_states * attention_mask[..., None]
+        return last_hidden.sum(axis=1) / attention_mask.sum(axis=1)[..., None]
+
+    @staticmethod
+    def _normalize(vector: npt.NDArray) -> npt.NDArray:
+        """
+        Normalizes a vector to unit length using L2 norm.
+
+        Args:
+            vector (npt.NDArray): The input vector to normalize.
+
+        Returns:
+            npt.NDArray: The normalized vector with unit length.
+        """
+        norm = np.linalg.norm(vector)
+        if norm == 0:
+            return vector
+        return vector / norm
+
     def __call__(self, texts: Documents) -> Embeddings:
-        return list(map(generate_embeddings, texts))
+        """
+        Generates embeddings for a list of texts.
+
+        This method tokenizes the input texts, computes embeddings using the transformer model,
+        applies average pooling, and then normalizes the resulting vectors.
+
+        Args:
+            texts (Documents): A list of strings representing the documents to be embedded.
+
+        Returns:
+            Embeddings: A list of normalized embeddings, each represented as a list of floats.
+        """
+        inputs = self._tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512)
+        attention_mask = inputs["attention_mask"]
+
+        with self._torch.no_grad():
+            outputs = self._model(**inputs)
+
+        # Perform average pooling
+        embeddings = self._average_pool(outputs.last_hidden_state.numpy(), attention_mask.numpy())
+
+        # Normalize embeddings
+        embeddings = np.array([self._normalize(e) for e in embeddings])
+
+        # Convert embeddings to a list for compatibility with ChromaDB
+        return embeddings.tolist()
