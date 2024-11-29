@@ -4,22 +4,22 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/usr/repos/aa-Vector-DBs
+      - ./:/usr/repos/vector-dbs
     depends_on:
       - chromadb
-      - postgres
+      # - postgres
 
   # ChromaDB Service
   chromadb:
-    image: chromadb/chroma:latest
+    image: chromadb/chroma:0.5.13
     volumes:
       - ./chroma-data:/chroma/chroma
     environment:
-      - IS_PERSISTENT=TRUE  # let’s Chroma know to persist data
+      - IS_PERSISTENT=TRUE  # lets Chroma know to persist data
       - PERSIST_DIRECTORY=/chroma/chroma # this is the default path, change it as needed
-      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-TRUE}
+      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-FALSE}
     ports:
-      - 8000:8000
+      - "8000:8000"
     healthcheck:
       test: [ "CMD", "/bin/bash", "-c", "cat < /dev/null > /dev/tcp/localhost/8001" ]
       interval: 30s
@@ -60,6 +60,12 @@ services:
 #       DATABASE_CONNECTION_STRING: "postgresql://myuser:mypassword@postgres:5432/vdbms"  # New database for Vector Admin
 #     depends_on:
 #       - postgres  # Ensure Postgres starts before Vector Admin
+
+# # ChromaDB Admin Service
+#   chromadbadmin:
+#     image: fengzhichao/chromadb-admin:latest
+#     ports:
+#       - "3000:3000"  # Expose ChromaDB Admin
 
 volumes:
   chroma-data:
