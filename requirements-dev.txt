@@ -2,9 +2,14 @@ pre-commit==3.5.0
 isort==5.12.0
 black>=24.3.0
 flake8==6.1.0
-mypy==1.11.2
-chromadb==0.5.11
-# transformers==4.45.1
-# torch
-# torchvision==0.19.1
+mypy==1.12.0
+numpy==1.26.4
+chromadb==0.5.13
+transformers[torch]==4.46.0
 psycopg2-binary==2.9.9
+openai==1.55.3
+sentence_transformers==3.2.1
+pydantic-settings==2.6.0
+# Uncomment for local development on MacOS
+numpy==1.26.4
+onnxruntime==1.16.3

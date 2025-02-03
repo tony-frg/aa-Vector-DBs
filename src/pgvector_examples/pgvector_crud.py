@@ -159,7 +159,7 @@ class PgVectorCRUD:
 
 # This check ensures that the functions are only run when the script is executed directly, not when it's imported as a module.
 if __name__ == "__main__":
-    pg_crud = PgVectorCRUD(user="myuser", password="mypassword", host="postgres", port=5432, database="mydb")
+    pg_crud = PgVectorCRUD(user="myuser", password="mypassword", host="localhost", port=5433, database="mydb")
 
     sentences = [
         "A group of vibrant parrots chatter loudly, sharing stories of their tropical adventures.",
@@ -174,9 +174,23 @@ if __name__ == "__main__":
         "In the quantum realm, particles flicker in and out of existence, dancing to the tunes of probability.",
     ]
 
+    # Sample documents for a new collection
+    new_documents = [
+        "The majestic eagle soars high above the mountain peaks, scanning the terrain with sharp eyes.",
+        "Under a starry sky, a lone astronomer observes distant galaxies through his telescope.",
+        "The violinist pours their soul into each note, creating a symphony that touches the heart.",
+        "The bustling city streets are filled with the sounds of honking cars and lively conversations.",
+        "A gentle breeze rustles the leaves of the old oak tree, carrying the scent of blooming flowers.",
+        "In the arctic tundra, a polar bear hunts for seals beneath the vast expanse of ice and snow.",
+        "The artist splashes vivid colors on the canvas, turning imagination into a stunning landscape.",
+        "The spaceship glides silently through the void, exploring the mysteries of distant planets.",
+        "A baker kneads dough with care, crafting a loaf that fills the air with the aroma of fresh bread.",
+        "In the deep jungle, a hidden waterfall cascades into a crystal-clear pool surrounded by lush greenery.",
+    ]
+
     # Example of CRUD operations
     # pg_crud.create_items(sentences)
-    pg_crud.read_similar_items(query="Give me some content about the ocean", limit=5)
+    # pg_crud.read_similar_items(query="Give me some content about the ocean", limit=5)
     # pg_crud.update_item(item_id=1, new_content="Updated content about tropical birds.")
     # pg_crud.update_item(item_id=2, new_content="Updated content about Mathematician.")
     pg_crud.delete_item(item_id=3)
